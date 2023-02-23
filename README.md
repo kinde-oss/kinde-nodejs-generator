@@ -10,11 +10,10 @@ The Kinde Nodejs SDK allows developers to generate NodeJS SDK @kinde-oss/kinde-n
 1. Download file kinde-nodejs-generator.jar in repository.
 2. Run the following command using npm:
 
-- `java -jar kinde-nodejs-generator.jar generate -i <OpenAPI_specification_name.yml> -g javascript -o <outputDir> --skip-validate-spec`
+- `java -jar kinde-nodejs-generator.jar generate -i <OpenAPI_specification_name.yml> -g javascript -o <outputDir>`
 
 - Example:
 
-- `java -jar kinde-nodejs-generator.jar generate -i https://kinde.com/api/kinde-mgmt-api-specs.yaml -g javascript -o ./out/myClient --skip-validate-spec
-`
+- `java -jar kinde-nodejs-generator.jar generate -i https://kinde.com/api/kinde-mgmt-api-specs.yaml -g javascript -o ./out/myClient`
 
 If you need help connecting to Kinde, please contact us at [support@kinde.com](mailto:support@kinde.com).
