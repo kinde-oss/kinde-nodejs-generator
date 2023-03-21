@@ -5,6 +5,14 @@ The Kinde Nodejs SDK allows developers to generate NodeJS SDK @kinde-oss/kinde-n
 
 ## Require
 - Java SDK >=8
+- Maven
+
+## How to generate kinde-nodejs-generator.jar
+1. Open terminal at `openapi-generator` folder
+2. Type command: `mvn install -DskipTests`
+3. Go to source `.\kinde-nodejs-generator\openapi-generator\modules\openapi-generator-cli\target`
+4. Rename file `openapi-generator-cli.jar` to `kinde-nodejs-generator.jar`. 
+
 
 ## How to use
 1. Download file kinde-nodejs-generator.jar in repository.
