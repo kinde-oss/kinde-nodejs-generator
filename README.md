@@ -5,6 +5,7 @@ The Kinde Nodejs SDK allows developers to generate NodeJS SDK @kinde-oss/kinde-n
 
 ## Require
 - Java SDK >=8
+- Maven
 
 ## How to generate kinde-nodejs-generator.jar
 1. Open terminal at `openapi-generator` folder
