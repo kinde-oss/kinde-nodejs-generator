@@ -1,0 +1,29 @@
+generateSourceCodeOnly: true
+templateDir: my_custom_templates
+files:
+  KindeClient.js:
+    destinationFilename: src/KindeClient.js
+  GrantType.js:
+    destinationFilename: src/sdk/constant/GrantType.js
+  FlagDataTypeMap.js:
+    destinationFilename: src/sdk/constant/FlagDataTypeMap.js
+  AuthorizationCode.js:
+    destinationFilename: src/sdk/oauth2/AuthorizationCode.js
+  ClientCredentials.js:
+    destinationFilename: src/sdk/oauth2/ClientCredentials.js
+  PKCE.js:
+    destinationFilename: src/sdk/oauth2/PKCE.js
+  RefreshToken.js:
+    destinationFilename: src/sdk/oauth2/RefreshToken.js
+  Utils.js:
+    destinationFilename: src/sdk/utils/Utils.js
+  KindeClient.spec.js:
+    destinationFilename: test/sdk/KindeClient.spec.js
+  OAuth2AuthorizationCode.spec.js:
+    destinationFilename: test/sdk/OAuth2AuthorizationCode.spec.js
+  OAuth2ClientCredentials.spec.js:
+    destinationFilename: test/sdk/OAuth2ClientCredentials.spec.js
+  OAuth2PKCE.spec.js:
+    destinationFilename: test/sdk/OAuth2PKCE.spec.js
+  OAuth2RefreshToken.spec.js:
+    destinationFilename: test/sdk/OAuth2RefreshToken.spec.js

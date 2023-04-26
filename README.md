@@ -4,24 +4,23 @@
 The Kinde Nodejs SDK allows developers to generate NodeJS SDK @kinde-oss/kinde-nodejs-sdk [https://github.com/kinde-oss/kinde-nodejs-sdk](https://github.com/kinde-oss/kinde-nodejs-sdk)
 
 ## Require
-- Java SDK >=8
-- Maven
+- node >= 18.x.x
 
-## How to generate kinde-nodejs-generator.jar
-1. Open terminal at `openapi-generator` folder
-2. Type command: `mvn package -DskipTests`
-3. Go to source `.\kinde-nodejs-generator\openapi-generator\modules\openapi-generator-cli\target`
-4. Rename file `openapi-generator-cli.jar` to `kinde-nodejs-generator.jar`. 
+## Install OpenApi generator
+- npm i -g openapi-generator-cli
 
+## Clone the repository to your computer
+- git clone https://github.com/kinde-oss/kinde-nodejs-generator
 
-## How to use
-1. Download file kinde-nodejs-generator.jar in repository.
-2. Run the following command using npm:
+## Change the current working directory
+- cd kinde-nodejs-generator
 
-- `java -jar kinde-nodejs-generator.jar generate -i <OpenAPI_specification_name.yml> -g javascript -o <outputDir>`
+## To generate SDK please run
+- openapi-generator-cli generate -g javascript -i <OpenAPI_specification_name.yml> -c config.yaml -o <outputDir> --skip-validate-spec
 
-- Example:
+Example: 
+- openapi-generator-cli generate -g javascript  -i https://kinde.com/api/kinde-mgmt-api-specs.yaml -c config.yaml -o ../kinde-nodejs-sdk/ --skip-validate-spec
 
-- `java -jar kinde-nodejs-generator.jar generate -i https://kinde.com/api/kinde-mgmt-api-specs.yaml -g javascript -o ./out/myClient`
+Folder `kinde-nodejs-sdk` in the parent directory contains our final SDK after build.
 
 If you need help connecting to Kinde, please contact us at [support@kinde.com](mailto:support@kinde.com).
