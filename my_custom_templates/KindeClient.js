@@ -384,15 +384,15 @@ export default class KindeClient {
    * @returns {String} - Returns the access token
    */
   async getToken(request) {
-    const { kindeAccessToken, kindeRefreshToken } = request.session ?? {};
-    if (kindeAccessToken && !this.isTokenExpired(request)) {
-      return kindeAccessToken;
+    if (request.session.kindeAccessToken && !this.isTokenExpired(request)) {
+      return request.session.kindeAccessToken;
     }
     let auth, resGetToken;
     if (this.grantType === GrantType.CLIENT_CREDENTIALS) {
       auth = new ClientCredentials();
       resGetToken = await auth.getToken(this);
       if (resGetToken?.error) {
+        this.cleanSession(request);
         const msg = resGetToken?.error_description || resGetToken?.error;
         throw new Error(msg);
       }
@@ -401,8 +401,9 @@ export default class KindeClient {
     } 
     if (this.grantType === GrantType.AUTHORIZATION_CODE || this.grantType === GrantType.PKCE) {
       auth = new RefreshToken();
-      resGetToken = await auth.getToken(this, kindeRefreshToken);
+      resGetToken = await auth.getToken(this, request.session.kindeRefreshToken);
       if (resGetToken?.error) {
+        this.cleanSession(request);
         throw new Error('Refresh token are invalid or expired.');
       }
       this.saveToken(request, resGetToken);
@@ -420,8 +421,8 @@ export default class KindeClient {
     if (!request.session) {
       throw new Error('OAuth 2.0 authentication requires session support when using state. Did you forget to use express-session middleware?');
     }
-    const currentTime = Date.now() / 1000;
-    const tokenExpiration = request.session.kindeLoginTimeStamp + request.session.kindeExpiresIn;
+    const currentTime = Date.now();
+    const tokenExpiration = request.session.kindeLoginTimeStamp + request.session.kindeExpiresIn*1000;
     return currentTime > tokenExpiration;
   }
 
