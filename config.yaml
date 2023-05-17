@@ -3,6 +3,8 @@ templateDir: my_custom_templates
 files:
   KindeClient.js:
     destinationFilename: src/KindeClient.js
+  CookieOptions.js:
+    destinationFilename: src/sdk/constant/CookieOptions.js
   GrantType.js:
     destinationFilename: src/sdk/constant/GrantType.js
   FlagDataTypeMap.js:
