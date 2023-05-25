@@ -1,12 +1,12 @@
+import CookieOptions from "./sdk/constant/CookieOptions";
 import FlagDataTypeMap from "./sdk/constant/FlagDataTypeMap";
-import RefreshToken from "./sdk/oauth2/RefreshToken";
 import { GrantType } from "./index";
 import AuthorizationCode from "./sdk/oauth2/AuthorizationCode";
 import ClientCredentials from "./sdk/oauth2/ClientCredentials";
 import PKCE from "./sdk/oauth2/PKCE";
+import RefreshToken from "./sdk/oauth2/RefreshToken";
 import { getSessionId, parseJWT, pkceChallengeFromVerifier, randomString } from "./sdk/utils/Utils";
 import { SDK_VERSION } from "./sdk/utils/SDKVersion";
-import CookieOptions from "./sdk/constant/CookieOptions";
 
 /**
  * KindeClient class for OAuth 2.0 authentication.
@@ -126,7 +126,7 @@ export default class KindeClient {
             this.session[sessionId] = {
               kindeOauthState: state,
             };
-            res.cookie('sessionId', sessionId, CookieOptions)
+            res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
     
           case GrantType.PKCE:
@@ -142,7 +142,7 @@ export default class KindeClient {
               kindeOauthState: state,
               kindeOauthCodeVerifier: codeVerifier,
             };
-            res.cookie('sessionId', sessionId, CookieOptions)
+            res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
         }
       } catch (err) {
@@ -183,7 +183,7 @@ export default class KindeClient {
             this.session[sessionId] = {
               kindeOauthState: state,
             };
-            res.cookie('sessionId', sessionId, CookieOptions)
+            res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
   
           case GrantType.PKCE:
@@ -199,7 +199,7 @@ export default class KindeClient {
               kindeOauthState: state,
               kindeOauthCodeVerifier: codeVerifier,
             };
-            res.cookie('sessionId', sessionId, CookieOptions)
+            res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
         }
       } catch (err) {
@@ -311,7 +311,7 @@ export default class KindeClient {
             this.session[sessionId] = {
               kindeOauthState: state,
             };
-            res.cookie('sessionId', sessionId, CookieOptions)
+            res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
 
           case GrantType.PKCE:
@@ -328,7 +328,7 @@ export default class KindeClient {
               kindeOauthState: state,
               kindeOauthCodeVerifier: codeVerifier,
             };
-            res.cookie('sessionId', sessionId, CookieOptions)
+            res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
         }
       } catch (err) {
