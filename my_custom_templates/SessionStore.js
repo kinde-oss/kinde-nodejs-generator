@@ -3,7 +3,7 @@
  * @returns {Object} The session store object.
  */
 const createSessionStore = () => {
-  const store = {};
+  let store = {};
 
   /**
    * Get data from the session store based on sessionId.
@@ -11,7 +11,7 @@ const createSessionStore = () => {
    * @returns {any} The data associated with the sessionId.
    */
   const getData = (sessionId) => store[sessionId];
-
+  
   /**
    * Set data in the session store for a specific sessionId.
    * @param {string} sessionId - The session ID.
@@ -47,7 +47,7 @@ const createSessionStore = () => {
    * @param {string} sessionId - The session ID.
    */
   const removeData = (sessionId) => {
-    if (store[sessionId]) {
+    if (store[sessionId]){
       delete store[sessionId];
     }
   };
@@ -61,4 +61,4 @@ const createSessionStore = () => {
   };
 };
 
-export const SessionStore = createSessionStore();
+export default createSessionStore();

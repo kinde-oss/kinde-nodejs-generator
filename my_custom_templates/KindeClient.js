@@ -1,12 +1,11 @@
 import FlagDataTypeMap from "./sdk/constant/FlagDataTypeMap";
 import RefreshToken from "./sdk/oauth2/RefreshToken";
-import { GrantType } from "./index";
+import { GrantType, SessionStore } from "./index";
 import AuthorizationCode from "./sdk/oauth2/AuthorizationCode";
 import ClientCredentials from "./sdk/oauth2/ClientCredentials";
 import PKCE from "./sdk/oauth2/PKCE";
 import { getSessionId, parseJWT, pkceChallengeFromVerifier, randomString } from "./sdk/utils/Utils";
 import CookieOptions from "./sdk/constant/CookieOptions";
-import { SessionStore } from "./sdk/store/SessionStore";
 import { SDK_VERSION } from "./sdk/utils/SDKVersion";
 
 /**
@@ -82,7 +81,6 @@ export default class KindeClient {
     this.tokenEndpoint = `${domain}/oauth2/token`;
     this.logoutEndpoint = `${domain}/logout`;
     this.authorizationEndpoint = `${domain}/oauth2/auth`;
-    this.session = SessionStore;
   }
 
   /**
@@ -100,7 +98,7 @@ export default class KindeClient {
         org_code,
       } = req.query;
 
-      if (this.session.getDataByKey(sessionId, 'kindeAccessToken')) {
+      if (SessionStore.getDataByKey(sessionId, 'kindeAccessToken')) {
         return next();
       }
 
@@ -124,7 +122,7 @@ export default class KindeClient {
               org_code,
               start_page: 'login',
             });
-            this.session.setDataByKey(sessionId, 'kindeOauthState', state);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthState', state);
             res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
 
@@ -137,8 +135,8 @@ export default class KindeClient {
               org_code,
               start_page: 'login',
             }, codeChallenge);
-            this.session.setDataByKey(sessionId, 'kindeOauthState', state);
-            this.session.setDataByKey(sessionId, 'kindeOauthCodeVerifier', codeVerifier);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthState', state);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthCodeVerifier', codeVerifier);
             res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
         }
@@ -163,7 +161,7 @@ export default class KindeClient {
         org_code,
       } = req.query;
 
-      if (this.session.getDataByKey(sessionId, 'kindeAccessToken')) {
+      if (SessionStore.getDataByKey(sessionId, 'kindeAccessToken')) {
         return next();
       }
 
@@ -177,7 +175,7 @@ export default class KindeClient {
               org_code,
               start_page: 'registration',
             });
-            this.session.setDataByKey(sessionId, 'kindeOauthState', state);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthState', state);
             res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
 
@@ -190,8 +188,8 @@ export default class KindeClient {
               org_code,
               start_page: 'registration',
             }, codeChallenge);
-            this.session.setDataByKey(sessionId, 'kindeOauthState', state);
-            this.session.setDataByKey(sessionId, 'kindeOauthCodeVerifier', codeVerifier);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthState', state);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthCodeVerifier', codeVerifier);
             res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
         }
@@ -211,7 +209,7 @@ export default class KindeClient {
     return async (req, res, next) => {
       const sessionId = getSessionId(req);
       try {
-        if (this.session.getDataByKey(sessionId, 'kindeAccessToken')) {
+        if (SessionStore.getDataByKey(sessionId, 'kindeAccessToken')) {
           return next();
         }
 
@@ -227,7 +225,7 @@ export default class KindeClient {
         }
 
         // Validate the state parameter
-        if (!this.session.getDataByKey(sessionId, 'kindeOauthState') || state !== this.session.getDataByKey(sessionId, 'kindeOauthState')) {
+        if (!SessionStore.getDataByKey(sessionId, 'kindeOauthState') || state !== SessionStore.getDataByKey(sessionId, 'kindeOauthState')) {
           return next(new Error('Authentication failed because it tries to validate state'));
         }
 
@@ -249,7 +247,7 @@ export default class KindeClient {
             return next();
 
           case GrantType.PKCE:
-            const codeVerifier = this.session.getDataByKey(sessionId, 'kindeOauthCodeVerifier');
+            const codeVerifier = SessionStore.getDataByKey(sessionId, 'kindeOauthCodeVerifier');
             if (!codeVerifier) {
               return next(new Error('Not found code_verifier'));
             }
@@ -280,7 +278,7 @@ export default class KindeClient {
   createOrg() {
     return (req, res, next) => {
       const sessionId = getSessionId(req);
-      if (this.session.getDataByKey(sessionId, 'kindeAccessToken')) {
+      if (SessionStore.getDataByKey(sessionId, 'kindeAccessToken')) {
         return next();
       }
 
@@ -301,7 +299,7 @@ export default class KindeClient {
               org_name,
               start_page: 'registration',
             });
-            this.session.setDataByKey(sessionId, 'kindeOauthState', state);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthState', state);
             res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
 
@@ -315,8 +313,8 @@ export default class KindeClient {
               org_name,
               start_page: 'registration',
             }, codeChallenge);
-            this.session.setDataByKey(sessionId, 'kindeOauthState', state);
-            this.session.setDataByKey(sessionId, 'kindeOauthCodeVerifier', codeVerifier);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthState', state);
+            SessionStore.setDataByKey(sessionId, 'kindeOauthCodeVerifier', codeVerifier);
             res.cookie('sessionId', sessionId, CookieOptions);
             return res.redirect(authorizationURL);
         }
@@ -344,7 +342,7 @@ export default class KindeClient {
    * @param {Object} token - Token object containing access_token, id_token, expires_in, etc ...
    */
   saveToken(sessionId, token) {
-    this.session.setData(sessionId, {
+    SessionStore.setData(sessionId, {
       kindeAccessToken: token.access_token,
       kindeIdToken: token.id_token,
       kindeRefreshToken: token.refresh_token,
@@ -362,14 +360,14 @@ export default class KindeClient {
           email: payloadIdToken.email,
           picture: payloadIdToken.picture,
         };
-        this.session.setDataByKey(sessionId, 'kindeUser', user);
+        SessionStore.setDataByKey(sessionId, 'kindeUser', user);
       }
     }
     if (token.access_token) {
       const payloadAccessToken = parseJWT(token.access_token);
       if (payloadAccessToken) {
         const { feature_flags } = payloadAccessToken;
-        this.session.setDataByKey(sessionId, 'kindeFeatureFlags', feature_flags);
+        SessionStore.setDataByKey(sessionId, 'kindeFeatureFlags', feature_flags);
       }
     }
   }
@@ -382,15 +380,15 @@ export default class KindeClient {
   async getToken(request) {
     const sessionId = getSessionId(request);
     try {
-      if (this.session.getDataByKey(sessionId, 'kindeAccessToken') && !this.isTokenExpired(sessionId)) {
-        return this.session.getDataByKey(sessionId, 'kindeAccessToken');
+      if (SessionStore.getDataByKey(sessionId, 'kindeAccessToken') && !this.isTokenExpired(sessionId)) {
+        return SessionStore.getDataByKey(sessionId, 'kindeAccessToken');
       }
       let auth, res_get_token;
       if (this.grantType === GrantType.CLIENT_CREDENTIALS) {
         auth = new ClientCredentials();
         res_get_token = await auth.getToken(this);
         if (res_get_token?.error) {
-          this.session.removeData(sessionId);
+          SessionStore.removeData(sessionId);
           const msg = res_get_token?.error_description || res_get_token?.error;
           throw new Error(msg);
         }
@@ -399,16 +397,16 @@ export default class KindeClient {
       }
       if (this.grantType === GrantType.AUTHORIZATION_CODE || this.grantType === GrantType.PKCE) {
         auth = new RefreshToken();
-        res_get_token = await auth.getToken(this, this.session.getDataByKey(sessionId, 'kindeRefreshToken'));
+        res_get_token = await auth.getToken(this, SessionStore.getDataByKey(sessionId, 'kindeRefreshToken'));
         if (res_get_token?.error) {
-          this.session.removeData(sessionId);
+          SessionStore.removeData(sessionId);
           throw new Error('Refresh token are invalid or expired.');
         }
         this.saveToken(sessionId, res_get_token);
         return res_get_token.access_token;
       }
     } catch (err) {
-      delete this.session[sessionId];
+      delete SessionStore[sessionId];
       throw new Error(err);
     }
   }
@@ -420,9 +418,9 @@ export default class KindeClient {
    */
   isTokenExpired(sessionId) {
     const currentTime = Date.now();
-    const tokenExpiration = this.session.getDataByKey(sessionId, 'kindeLoginTimeStamp') + this.session.getDataByKey(sessionId, 'kindeExpiresIn') * 1000;
+    const tokenExpiration = SessionStore.getDataByKey(sessionId, 'kindeLoginTimeStamp') + SessionStore.getDataByKey(sessionId, 'kindeExpiresIn') * 1000;
     if (currentTime > tokenExpiration) {
-      this.session.removeData(sessionId);
+      SessionStore.removeData(sessionId);
       return true;
     }
     return false;
@@ -441,7 +439,7 @@ export default class KindeClient {
       throw new Error('Request is missing required authentication credential');
     }
     const sessionId = getSessionId(request);
-    const flags = this.session.getDataByKey(sessionId, 'kindeFeatureFlags');
+    const flags = SessionStore.getDataByKey(sessionId, 'kindeFeatureFlags');
     const flag = flags && flags[code] ? flags[code] : {};
     const defaultValue = defaultValueObj?.defaultValue;
     if (flag.v === undefined && defaultValue === undefined) {
@@ -504,7 +502,7 @@ export default class KindeClient {
    * @param {Object} response - Response object
    */
   cleanSession(sessionId, response) {
-    this.session.removeData(sessionId);
+    SessionStore.removeData(sessionId);
     response.clearCookie('sessionId');
   }
 
@@ -515,7 +513,7 @@ export default class KindeClient {
    */
   isAuthenticated(request) {
     const sessionId = getSessionId(request);
-    if (!this.session.getDataByKey(sessionId, 'kindeLoginTimeStamp') || !this.session.getDataByKey(sessionId, 'kindeExpiresIn') || this.isTokenExpired(sessionId)) {
+    if (!SessionStore.getDataByKey(sessionId, 'kindeLoginTimeStamp') || !SessionStore.getDataByKey(sessionId, 'kindeExpiresIn') || this.isTokenExpired(sessionId)) {
       return false;
     }
     return true;
@@ -531,7 +529,7 @@ export default class KindeClient {
       throw new Error('Request is missing required authentication credential');
     }
     const sessionId = getSessionId(request);
-    return this.session.getDataByKey(sessionId, 'kindeUser');
+    return SessionStore.getDataByKey(sessionId, 'kindeUser');
   }
 
   /**
@@ -547,7 +545,7 @@ export default class KindeClient {
     }
     const sessionId = getSessionId(request);
     const tokenTypeParse = tokenType === 'access_token' ? 'AccessToken' : 'IdToken';
-    const token = this.session.getDataByKey(sessionId, `kinde${tokenTypeParse}`);
+    const token = SessionStore.getDataByKey(sessionId, `kinde${tokenTypeParse}`);
     if (!token) {
       throw new Error('Request is missing required authentication credential');
     }

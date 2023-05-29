@@ -7,6 +7,7 @@ import GrantType from './sdk/constant/GrantType';
 import KindeClient from './KindeClient';
 import PKCE from './sdk/oauth2/PKCE';
 import RefreshToken from './sdk/oauth2/RefreshToken';
+import SessionStore from './sdk/store/SessionStore';
 {{#models}}import {{#model}}{{classFilename}}{{/model}} from './{{#modelPackage}}{{.}}/{{/modelPackage}}{{importPath}}';
 {{/models}}{{#apiInfo}}{{#apis}}import {{importPath}} from './{{#apiPackage}}{{.}}/{{/apiPackage}}{{importPath}}';
 {{/apis}}{{/apiInfo}}
@@ -78,6 +79,12 @@ export {
      * @property {class:RefreshToken}
      */
     RefreshToken,
+
+    /**
+     * The SessionStore module.
+     * @property {module:SessionStore}
+     */
+    SessionStore,
 
     {{=< >=}}
     <#emitJSDoc>/**

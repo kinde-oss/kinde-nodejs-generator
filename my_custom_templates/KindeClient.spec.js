@@ -75,14 +75,14 @@ import sinon from 'sinon';
 
       it('should call login successfully', async () => {
         req.query = { state: 'random_state', org_code: 'org-code' };
-        instance.session.setData('session-id', {});
+        KindeManagementApi.SessionStore.setData('session-id', {});
         req.headers.cookie = 'sessionId=session-id';
         sandbox.stub(KindeManagementApi.AuthorizationCode.prototype, 'generateAuthorizationURL').returns('https://example.com/oauth2/auth?response_type=code&client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=openid%20profile%20email%20offline&state=random_state&org_code=org_code&start_page=login');
         await instance.login()(req, res, next);
         expect(res.cookie.calledOnce).to.be(true);
         expect(res.redirect.calledOnce).to.be(true);
         expect(res.redirect.getCall(0).args[0]).to.be(`https://example.com/oauth2/auth?response_type=code&client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=openid%20profile%20email%20offline&state=random_state&org_code=org_code&start_page=login`);
-        expect(instance.session.getDataByKey('session-id', 'kindeOauthState')).to.be('random_state');
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeOauthState')).to.be('random_state');
       });
 
       it('should call login throw an error', async () => {
@@ -116,14 +116,14 @@ import sinon from 'sinon';
 
       it('should call register successfully', async () => {
         req.query = { state: 'random_state', org_code: 'org-code' };
-        instance.session.setData('session-id', {});
+        KindeManagementApi.SessionStore.setData('session-id', {});
         req.headers.cookie = 'sessionId=session-id';
         sandbox.stub(KindeManagementApi.AuthorizationCode.prototype, 'generateAuthorizationURL').returns('https://example.com/oauth2/auth?response_type=code&client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=openid%20profile%20email%20offline&state=random_state&org_code=org_code&start_page=registration');
         await instance.register()(req, res, next);
         expect(res.cookie.calledOnce).to.be(true);
         expect(res.redirect.calledOnce).to.be(true);
         expect(res.redirect.getCall(0).args[0]).to.be(`https://example.com/oauth2/auth?response_type=code&client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=openid%20profile%20email%20offline&state=random_state&org_code=org_code&start_page=registration`);
-        expect(instance.session.getDataByKey('session-id', 'kindeOauthState')).to.be('random_state');
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeOauthState')).to.be('random_state');
       });
 
       it('should call register throw an error', async () => {
@@ -178,7 +178,7 @@ import sinon from 'sinon';
 
       it('should call callback successfully', async () => {
         req.query = { state: 'random_state', code: 'code' };
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeOauthState: 'random_state'
         });
         req.headers.cookie = 'sessionId=session-id';
@@ -227,14 +227,14 @@ import sinon from 'sinon';
 
       it('should call createOrg successfully', async () => {
         req.query = { state: 'random_state', org_code: 'org-code' };
-        instance.session.setData('session-id', {});
+        KindeManagementApi.SessionStore.setData('session-id', {});
         req.headers.cookie = 'sessionId=session-id';
         sandbox.stub(KindeManagementApi.AuthorizationCode.prototype, 'generateAuthorizationURL').returns('https://example.com/oauth2/auth?response_type=code&client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=openid%20profile%20email%20offline&state=random_state&start_page=registration&is_create_org=true&org_name=org_name');
         await instance.createOrg()(req, res, next);
         expect(res.cookie.calledOnce).to.be(true);
         expect(res.redirect.calledOnce).to.be(true);
         expect(res.redirect.getCall(0).args[0]).to.be(`https://example.com/oauth2/auth?response_type=code&client_id=client_id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=openid%20profile%20email%20offline&state=random_state&start_page=registration&is_create_org=true&org_name=org_name`);
-        expect(instance.session.getDataByKey('session-id', 'kindeOauthState')).to.be('random_state');
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeOauthState')).to.be('random_state');
       });
 
       it('should call createOrg throws an error', async () => {
@@ -255,7 +255,7 @@ import sinon from 'sinon';
           redirect: sinon.spy(),
           clearCookie: sinon.spy(),
         };
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeAccessToken: 'my.access-token.example',
           kindeRefreshToken: 'my.refresh-token.example',
           kindeLoginTimeStamp: Date.now(),
@@ -265,7 +265,7 @@ import sinon from 'sinon';
         expect(res.clearCookie.calledOnce).to.be(true);
         expect(res.redirect.calledOnce).to.be(true);
         expect(res.redirect.calledWith(`${instance.logoutEndpoint}?redirect=${encodeURIComponent(instance.logoutRedirectUri)}`)).to.be(true);
-        expect(instance.session.getData('session-id')).to.be(undefined);
+        expect(KindeManagementApi.SessionStore.getData('session-id')).to.be(undefined);
       });
     });
 
@@ -285,7 +285,7 @@ import sinon from 'sinon';
             cookie: 'sessionId=session-id',
           },
         };
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeAccessToken: 'my.access-token.example',
           kindeRefreshToken: 'my.refresh-token.example',
           kindeLoginTimeStamp: Date.now(),
@@ -329,27 +329,27 @@ import sinon from 'sinon';
 
       it('should call saveToken successfully', () => {
         instance.saveToken('session-id', token);
-        expect(instance.session.getDataByKey('session-id', 'kindeLoginTimeStamp')).to.be.a('number');
-        expect(instance.session.getDataByKey('session-id', 'kindeAccessToken')).to.be(validToken);
-        expect(instance.session.getDataByKey('session-id', 'kindeIdToken')).to.be(validToken);
-        expect(instance.session.getDataByKey('session-id', 'kindeExpiresIn')).to.be(3600);
-        expect(instance.session.getDataByKey('session-id', 'kindeRefreshToken')).to.be('my.refresh-token.example');
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeLoginTimeStamp')).to.be.a('number');
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeAccessToken')).to.be(validToken);
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeIdToken')).to.be(validToken);
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeExpiresIn')).to.be(3600);
+        expect(KindeManagementApi.SessionStore.getDataByKey('session-id', 'kindeRefreshToken')).to.be('my.refresh-token.example');
       });
     });
 
     describe('isTokenExpired', () => {
       it('should call isTokenExpired return true if it is expired', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeLoginTimeStamp: Date.now() - 3601 * 1000,
           kindeExpiresIn: 3600,
         });
         const result = instance.isTokenExpired('session-id');
-        expect(instance.session.getData('session-id')).to.equal(undefined);
+        expect(KindeManagementApi.SessionStore.getData('session-id')).to.equal(undefined);
         expect(result).to.be(true);
       });
 
       it('should call isTokenExpired return false if it is not expired', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeLoginTimeStamp: Date.now() - 1000,
           kindeExpiresIn: 3600,
         });
@@ -369,7 +369,7 @@ import sinon from 'sinon';
       });
 
       it('should call getFlag return the flag value if it is found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 'i', v: 123 },
           },
@@ -388,7 +388,7 @@ import sinon from 'sinon';
       });
 
       it('should call getFlag return the default value if the flag is not found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -406,7 +406,7 @@ import sinon from 'sinon';
       });
 
       it('should call getFlag throw error if the flag is not found and no default provided', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -421,7 +421,7 @@ import sinon from 'sinon';
       });
 
       it('should call getFlag throw error if the flag is of type not boolean', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 's', v: 'a' },
           },
@@ -450,7 +450,7 @@ import sinon from 'sinon';
       });
 
       it('should call getBooleanFlag return the flag value if it is found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 'b', v: false },
           },
@@ -467,7 +467,7 @@ import sinon from 'sinon';
       });
 
       it('should call getBooleanFlag return the default value if the flag is not found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -482,7 +482,7 @@ import sinon from 'sinon';
       });
 
       it('should call getBooleanFlag throw error if the flag is not found and no default provided', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -497,7 +497,7 @@ import sinon from 'sinon';
       });
 
       it('should call getBooleanFlag throw error if the flag is of type not boolean', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 's', v: 'a' },
           },
@@ -525,7 +525,7 @@ import sinon from 'sinon';
       });
 
       it('should call getStringFlag return the flag value if it is found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 's', v: 'flag-value' },
           },
@@ -541,7 +541,7 @@ import sinon from 'sinon';
       });
 
       it('should call getStringFlag return the default value if the flag is not found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -556,7 +556,7 @@ import sinon from 'sinon';
       });
 
       it('should call getStringFlag throw error if the flag is not found and no default provided', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -571,7 +571,7 @@ import sinon from 'sinon';
       });
 
       it('should call getStringFlag throw error if the flag is of type not boolean', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 'b', v: true },
           },
@@ -599,7 +599,7 @@ import sinon from 'sinon';
       });
 
       it('should call getIntegerFlag return the flag value if it is found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 'i', v: 123 },
           },
@@ -615,7 +615,7 @@ import sinon from 'sinon';
       });
 
       it('should call getIntegerFlag return the default value if the flag is not found', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -630,7 +630,7 @@ import sinon from 'sinon';
       });
 
       it('should call getIntegerFlag throw error if the flag is not found and no default provided', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {},
         });
         const request = {
@@ -645,7 +645,7 @@ import sinon from 'sinon';
       });
 
       it('should call getIntegerFlag throw error if the flag is of type not boolean', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 'b', v: true },
           },
@@ -664,7 +664,7 @@ import sinon from 'sinon';
 
     describe('cleanSession', function() {
       it('should call cleanSession successfully', function() {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeFeatureFlags: {
             'my-flag': { t: 'b', v: true },
           },
@@ -674,13 +674,13 @@ import sinon from 'sinon';
         };
         instance.cleanSession('session-id', res);
         expect(res.clearCookie.calledOnce).to.be(true);
-        expect(instance.session.getData('session-id')).to.be(undefined);
+        expect(KindeManagementApi.SessionStore.getData('session-id')).to.be(undefined);
       });
     });
 
     describe('isAuthenticated', function() {
       it('should call isAuthenticated return true', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeLoginTimeStamp: Date.now(),
           kindeExpiresIn: 86399,
         });
@@ -694,7 +694,7 @@ import sinon from 'sinon';
       });
 
       it('should call isAuthenticated return false', () => {
-        instance.session.setData('session-id', {});
+        KindeManagementApi.SessionStore.setData('session-id', {});
         const request = {
           headers: {
             cookie: 'sessionId=session-id',
@@ -707,7 +707,7 @@ import sinon from 'sinon';
 
     describe('getUserDetails', function() {
       it('should call getUserDetails successfully', function() {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeLoginTimeStamp: Date.now(),
           kindeExpiresIn: 86399,
           kindeUser: {
@@ -730,7 +730,7 @@ import sinon from 'sinon';
       });
 
       it('should call getUserDetails throw an error', function() {
-        instance.session.setData('session-id', {});
+        KindeManagementApi.SessionStore.setData('session-id', {});
         const isAuthenticatedStub = sinon.stub(instance, 'isAuthenticated').returns(false);  
         expect(function() {
           instance.getUserDetails(request);
@@ -755,7 +755,7 @@ import sinon from 'sinon';
       });
 
       it('should call getClaims successfully', () => {
-        instance.session.setData('session-id', {
+        KindeManagementApi.SessionStore.setData('session-id', {
           kindeIdToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
         });
         req.headers.cookie = 'sessionId=session-id';
