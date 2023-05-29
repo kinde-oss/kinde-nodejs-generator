@@ -17,6 +17,8 @@ files:
     destinationFilename: src/sdk/oauth2/PKCE.js
   RefreshToken.js:
     destinationFilename: src/sdk/oauth2/RefreshToken.js
+  SessionStore.js:
+    destinationFilename: src/sdk/store/SessionStore.js
   Utils.js:
     destinationFilename: src/sdk/utils/Utils.js
   KindeClient.spec.js:
