@@ -38,10 +38,10 @@ Run the following command to generate the SDK:
 openapi-generator-cli generate -g javascript -i <OpenAPI_specification_name.yml> -c config.yaml -o <outputDir> --skip-validate-spec
 ```
 
-**Note:** The API specifications should always point to Kinde's hosted version: https://kinde.com/api/kinde-mgmt-api-specs.yaml. This is set via the ` -i` option in the [OpenAPI Generator CLI](https://openapi-generator.tech/docs/usage/), for example:
+**Note:** The API specifications should always point to Kinde's hosted version: https://api-spec.kinde.com/kinde-combined-api-specs.yaml. This is set via the ` -i` option in the [OpenAPI Generator CLI](https://openapi-generator.tech/docs/usage/), for example:
 
 ```bash
-openapi-generator-cli generate -i https://kinde.com/api/kinde-mgmt-api-specs.yaml
+openapi-generator-cli generate -i https://api-spec.kinde.com/kinde-combined-api-specs.yaml
 ```
 
 The SDK gets outputted to: `kinde-nodejs-sdk`, which you can enter via:
